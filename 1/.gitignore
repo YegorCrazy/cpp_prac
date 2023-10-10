@@ -1,0 +1,6 @@
+CMakeFiles/*
+docs/*
+CMakeCache*
+cmake*
+main
+Makefile
