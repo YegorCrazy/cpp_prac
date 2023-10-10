@@ -31,12 +31,12 @@ class negative_denominator_error : public std::runtime_error {
 };
 
 enum class operation {
-	add,
-	sub,
-	mul,
-	div,
-	eq_denom,
-	to_int,
+    add,
+    sub,
+    mul,
+    div,
+    eq_denom,
+    to_int,
 };
 
 /**
@@ -49,10 +49,10 @@ template <class T1, class T2>
 class overflow_error : public std::runtime_error {
 public:
     overflow_error(const char* what, RationalNumber<T1> n1, RationalNumber<T2> n2, operation oper) :
-		std::runtime_error{what}, n1{n1}, n2{n2}, oper{oper} {}
-	RationalNumber<T1> n1;
-	RationalNumber<T2> n2;
-	operation oper;
+        std::runtime_error{what}, n1{n1}, n2{n2}, oper{oper} {}
+    RationalNumber<T1> n1;
+    RationalNumber<T2> n2;
+    operation oper;
 };
 
 /**
@@ -65,8 +65,8 @@ public:
 class invalid_string_error : public std::runtime_error {
 public:
     invalid_string_error(std::string what, std::string reason) :
-		std::runtime_error{what}, reason{reason} {}
-	std::string reason;
+        std::runtime_error{what}, reason{reason} {}
+    std::string reason;
 };
 
 /**
@@ -99,32 +99,32 @@ T get_max_delim(T a, T b) {
 
 template <class T>
 T from_string(std::string s) {
-	T res = 0;
-	int index = 0;
-	bool neg = false;
-	while (index < s.size()) {
-		if (index == 0 && s[0] == '-') {
-			neg = true;
-			continue;
-		}
-		if (s[index] < '0' || s[index] > '9') {
-			throw std::runtime_error("invalid string characters");
-		}
-		int current_digit = s[index] - '0';
-		if (__builtin_mul_overflow(res, 10, &res)) {
-			throw std::runtime_error("number too big");
-		}
-		if (__builtin_add_overflow(res, current_digit, &res)) {
-			throw std::runtime_error("number too big");
-		}
-		index += 1;
-	}
-	if (neg) {
-		if (__builtin_mul_overflow(res, -1, &res)) {
-			throw std::runtime_error("number too big");
-		}
-	}
-	return res;
+    T res = 0;
+    int index = 0;
+    bool neg = false;
+    while (index < s.size()) {
+        if (index == 0 && s[0] == '-') {
+            neg = true;
+            continue;
+        }
+        if (s[index] < '0' || s[index] > '9') {
+            throw std::runtime_error("invalid string characters");
+        }
+        int current_digit = s[index] - '0';
+        if (__builtin_mul_overflow(res, 10, &res)) {
+            throw std::runtime_error("number too big");
+        }
+        if (__builtin_add_overflow(res, current_digit, &res)) {
+            throw std::runtime_error("number too big");
+        }
+        index += 1;
+    }
+    if (neg) {
+        if (__builtin_mul_overflow(res, -1, &res)) {
+            throw std::runtime_error("number too big");
+        }
+    }
+    return res;
 }
 
 template <class T>
@@ -192,17 +192,17 @@ public:
 
     /// Конструктор из строчного представления числителя и знаменателя
     RationalNumber(const char* numerator, const char* denominator) {
-		try {
-			numerator_ = from_string<T>(numerator);
-		} catch (std::runtime_error& ex) {
-			throw invalid_string_error("invalid string", numerator);
-		}
-		try {
-			denominator_ = from_string<T>(denominator);
-		} catch (std::runtime_error& ex) {
-			throw invalid_string_error("invalid string", denominator);
-		}
-	}
+        try {
+            numerator_ = from_string<T>(numerator);
+        } catch (std::runtime_error& ex) {
+            throw invalid_string_error("invalid string", numerator);
+        }
+        try {
+            denominator_ = from_string<T>(denominator);
+        } catch (std::runtime_error& ex) {
+            throw invalid_string_error("invalid string", denominator);
+        }
+    }
 
     /// Конструктор из строчного представления рационального числа
     RationalNumber(const char* init_c) {
@@ -503,13 +503,13 @@ public:
         }
         bool catched = false;
         try {
-			auto cc = RationalNumber<long long>("100000000000000000000000000000000000000000000000000000000000000000");
-		} catch (invalid_string_error& ex) {
-			catched = true;
-		}
-		if (!catched) {
-			throw test_failed_error("big string test failed");
-		}
+            auto cc = RationalNumber<long long>("100000000000000000000000000000000000000000000000000000000000000000");
+        } catch (invalid_string_error& ex) {
+            catched = true;
+        }
+        if (!catched) {
+            throw test_failed_error("big string test failed");
+        }
         RationalNumber a(3, 5);
         RationalNumber b(5, 6);
         if (a + b != RationalNumber(43, 30)) {
@@ -537,14 +537,14 @@ public:
             throw test_failed_error("div-copy test failed");
         }
         try {
-			auto cc = RationalNumber(1000000000, 1) * RationalNumber(1000000000, 1);
-		} catch (overflow_error<int, int>& ex) {
-			std::cout << ex.n1 << " " << ex.n2 << std::endl;
-			catched = true;
-		}
-		if (!catched) {
-			throw test_failed_error("overflow test failed");
-		}
+            auto cc = RationalNumber(1000000000, 1) * RationalNumber(1000000000, 1);
+        } catch (overflow_error<int, int>& ex) {
+            std::cout << ex.n1 << " " << ex.n2 << std::endl;
+            catched = true;
+        }
+        if (!catched) {
+            throw test_failed_error("overflow test failed");
+        }
         if (!(a < b)) {
             throw test_failed_error("less test failed");
         }
