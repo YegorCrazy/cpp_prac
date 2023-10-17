@@ -233,7 +233,7 @@ public:
     }
 
     /// Конструктор присваивания
-    RationalNumber& operator= (RationalNumber& other) {
+    RationalNumber& operator= (const RationalNumber& other) {
         numerator_ = other.numerator_;
         denominator_ = other.denominator_;
         return *this;
