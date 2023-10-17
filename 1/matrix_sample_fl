@@ -1,0 +1,10 @@
+#
+# This file describes
+# sparse matrix
+#
+matrix float 50000 6000
+1 1 1.55
+# dadawdawd
+6000 2 23.6
+7 1 -1.88888
+22 2 -60

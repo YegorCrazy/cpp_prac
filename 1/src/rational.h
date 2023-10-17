@@ -1,3 +1,5 @@
+#pragma once
+
 #include <bitset>
 #include <exception>
 #include <limits>
@@ -5,6 +7,8 @@
 #include <stdexcept>
 #include <string>
 #include <cmath>
+
+#include <cstdlib>
 
 #include <iostream>
 
@@ -130,6 +134,11 @@ T from_string(std::string s) {
 template <class T>
 RationalNumber<T> make_canonical(RationalNumber<T> arg);
 
+template <class T>
+std::string to_string(RationalNumber<T>& num) {
+    return std::string(num);
+}
+
 /**
     \brief Рациональное число
 
@@ -207,17 +216,31 @@ public:
     /// Конструктор из строчного представления рационального числа
     RationalNumber(const char* init_c) {
         std::string init = std::string(init_c);
+        RationalNumber new_one;
         int pos = init.find("/");
         if (pos == std::string::npos) {
-            throw invalid_string_error("no slash in string", init);
+            try {
+                T numerator = from_string<T>(init);
+                new_one = RationalNumber(numerator);
+            } catch (std::runtime_error& ex) {
+                throw invalid_string_error("invalid string", init);
+            }
+        } else {
+            new_one = RationalNumber(init.substr(0, pos).c_str(), init.substr(pos + 1, init.size() - pos - 1).c_str());
         }
-        auto new_one = RationalNumber(init.substr(0, pos).c_str(), init.substr(pos + 1, init.size() - pos - 1).c_str());
         numerator_ = new_one.get_numerator();
         denominator_ = new_one.get_denominator();
     }
 
     /// Конструктор присваивания
     RationalNumber& operator= (RationalNumber& other) {
+        numerator_ = other.numerator_;
+        denominator_ = other.denominator_;
+        return *this;
+    }
+
+    /// Конструктор присваивания по rvalue-ссылке
+    RationalNumber& operator= (RationalNumber&& other) {
         numerator_ = other.numerator_;
         denominator_ = other.denominator_;
         return *this;
@@ -246,13 +269,12 @@ public:
     }
 
     /// Оператор унарного минуса
-    RationalNumber operator- () {
+    RationalNumber operator- () const {
         T new_numerator;
         if (__builtin_mul_overflow(numerator_, -1, &new_numerator)) {
-            throw overflow_error("type overflow", *this, -1, operation::mul);
+            throw overflow_error("type overflow", *this, RationalNumber(-1), operation::mul);
         }
-        numerator_ = new_numerator;
-        return *this;
+        return RationalNumber(new_numerator, denominator_);
     }
 
     /// Оператор +=
@@ -486,6 +508,14 @@ std::pair<RationalNumber<T>, RationalNumber<T2>> make_equal_denominator(const Ra
     return {RationalNumber<T>{new_numerator_1, new_denominator}, RationalNumber<T2>{new_numerator_2, new_denominator}};
 }
 
+template <class T>
+RationalNumber<T> abs(const RationalNumber<T>& num) {
+    if (num.get_numerator() < 0) {
+        return -num;
+    }
+    return num;
+}
+
 /**
     \brief Класс с тестами для класса RationalNumber
 
@@ -539,7 +569,7 @@ public:
         try {
             auto cc = RationalNumber(1000000000, 1) * RationalNumber(1000000000, 1);
         } catch (overflow_error<int, int>& ex) {
-            std::cout << ex.n1 << " " << ex.n2 << std::endl;
+            //std::cout << ex.n1 << " " << ex.n2 << std::endl;
             catched = true;
         }
         if (!catched) {
@@ -578,9 +608,6 @@ public:
         if (std::string(b) != "5/6") {
             throw test_failed_error("string test failed");
         }
-        const RationalNumber<char> z = RationalNumber<char>(3, 2);
-        RationalNumber<char> y = RationalNumber<char>(-5, 8);
-        std::cout << std::string(2 + z + y) << std::endl;
-        std::cout << "tests finished" << std::endl;
+        std::cout << "rational tests completed" << std::endl;
     }
 };

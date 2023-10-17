@@ -1,0 +1,10 @@
+#
+# This file describes
+# sparse matrix
+#
+matrix rational 50000 6000
+1 1 <100>
+# dadawdawd
+6000 2 <23/5>
+7 1 <5/3>
+22 2 <44/1>

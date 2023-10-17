@@ -1,0 +1,10 @@
+#
+# This file describes
+# sparse matrix
+#
+matrix integer 50000 6000
+1 1 1
+# dadawdawd
+6000 2 23
+7 1 -1
+22 2 -60
