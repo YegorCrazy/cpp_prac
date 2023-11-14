@@ -102,7 +102,7 @@ ISolution* MainCycle::process () const {
                 delete cur_sol;
                 cur_sol = new_sol;
             } else {
-                if ((rand() % 1000000) / 1000000.0 <= std::exp((cur_sol->score() - new_sol->score()) / cur_temp)) {
+                if (rand() / (double)RAND_MAX <= std::exp((cur_sol->score() - new_sol->score()) / cur_temp)) {
                     delete cur_sol;
                     cur_sol = new_sol;
                 } else {
