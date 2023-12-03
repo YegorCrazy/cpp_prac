@@ -4,6 +4,8 @@
 #include <cmath>
 #include <cstdlib>
 
+#include <iostream>
+
 Solution::Solution(unsigned proc_num, const std::vector<unsigned>& works_len) :
     proc_num_(proc_num), works_len_(works_len)
 {
@@ -92,6 +94,9 @@ ISolution* MainCycle::process () const {
             auto new_sol = cur_sol->clone();
             mutator_->mutate(new_sol);
             if (new_sol->score() < best_sol->score()) {
+                if (new_sol->score() <= 100) {
+                    std::cout << "found new best: " << new_sol->score() << std::endl;
+                }
                 steps_without_improvement = 0;
                 delete best_sol;
                 best_sol = new_sol->clone();
@@ -110,7 +115,7 @@ ISolution* MainCycle::process () const {
                 }
             }
         }
-        if (steps_without_improvement >= 100) {
+        if (steps_without_improvement >= 400) {
             break;
         }
         cur_temp = temp_decrease_->decrease(cur_temp, iter_num);
