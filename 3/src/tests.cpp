@@ -125,6 +125,7 @@ TEST(DerivativeTests, IdenticalTest) {
         ASSERT_TRUE(f->derivative(i) == x(i));
     }
 }
+
 TEST(DerivativeTests, ConstantTest) {
     auto f = TFunction::construct(FunctionType::constant, 3);
     auto x = [](double arg){return 0;};
@@ -132,6 +133,7 @@ TEST(DerivativeTests, ConstantTest) {
         ASSERT_TRUE(f->derivative(i) == x(i));
     }
 }
+
 TEST(DerivativeTests, PowerTest) {
     auto f = TFunction::construct(FunctionType::power, 3);
     auto x = [](double arg){return 3 * pow(arg, 2);};
@@ -139,6 +141,7 @@ TEST(DerivativeTests, PowerTest) {
         ASSERT_TRUE(f->derivative(i) == x(i));
     }
 }
+
 TEST(DerivativeTests, ExponentialTest) {
     auto f = TFunction::construct(FunctionType::exponential, 3);
     auto x = [](double arg){return log(3) * pow(3, arg);};
@@ -146,12 +149,23 @@ TEST(DerivativeTests, ExponentialTest) {
         ASSERT_TRUE(f->derivative(i) == x(i));
     }
 }
+
 TEST(DerivativeTests, PolynomialTest) {
     auto f = TFunction::construct(FunctionType::polynomial, {1, 2, 3});
     auto x = [](double arg){return 2 + (6 * arg);};
     for (int i = 0; i < 10; ++i) {
         ASSERT_TRUE(f->derivative(i) == x(i));
     }
+}
+
+TEST(GradientTests, LinearTest) {
+    auto f = TFunction::construct(FunctionType::polynomial, {-3, 2});
+    ASSERT_LE(abs(gradientDescent(f, 10000) - 1.5), 0.1);
+}
+
+TEST(GradientTests, ParabolicTest) {
+    auto f = TFunction::construct(FunctionType::polynomial, {1, 2, 1});
+    ASSERT_LE(abs(gradientDescent(f, 10000) + 1), 0.1);
 }
 
 int main(int argc, char **argv)

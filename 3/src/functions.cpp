@@ -85,3 +85,12 @@ std::string OperationOnFunctions::toString() const {
         throw std::logic_error("unknown operation");
     }
 }
+
+double gradientDescent(std::shared_ptr<TFunction> func, unsigned iters) {
+    double step = 0.01;
+    double current_x = 0;
+    for (unsigned i = 0; i < iters; ++i) {
+        current_x = current_x - step * func->value(current_x) * func->derivative(current_x);
+    }
+    return current_x;
+}

@@ -142,3 +142,5 @@ private:
     std::shared_ptr<TFunction> second_;
     Operation oper_;
 };
+
+double gradientDescent(std::shared_ptr<TFunction> func, unsigned iters);
