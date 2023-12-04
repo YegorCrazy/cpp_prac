@@ -34,6 +34,23 @@ public:
     friend std::shared_ptr<TFunction> operator-(std::shared_ptr<TFunction> a, std::shared_ptr<TFunction> b);
     friend std::shared_ptr<TFunction> operator*(std::shared_ptr<TFunction> a, std::shared_ptr<TFunction> b);
     friend std::shared_ptr<TFunction> operator/(std::shared_ptr<TFunction> a, std::shared_ptr<TFunction> b);
+
+    template <class T>
+    friend std::shared_ptr<TFunction> operator+(std::shared_ptr<TFunction> a, T b) {
+        throw std::logic_error("invalid argument");
+    }
+    template <class T>
+    friend std::shared_ptr<TFunction> operator-(std::shared_ptr<TFunction> a, T b) {
+        throw std::logic_error("invalid argument");
+    }
+    template <class T>
+    friend std::shared_ptr<TFunction> operator*(std::shared_ptr<TFunction> a, T b) {
+        throw std::logic_error("invalid argument");
+    }
+    template <class T>
+    friend std::shared_ptr<TFunction> operator/(std::shared_ptr<TFunction> a, T b) {
+        throw std::logic_error("invalid argument");
+    }
 };
 
 class IdenticalFunction : public TFunction {

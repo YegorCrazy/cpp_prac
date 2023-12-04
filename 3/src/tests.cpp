@@ -40,6 +40,13 @@ TEST(ExceptionsTests, TwoArgsTest) {
     ASSERT_THROW(TFunction::construct(FunctionType::identical, {1, 2, 3}), std::logic_error);
 }
 
+TEST(ExceptionsTests, InvalidOperationArgTest) {
+    ASSERT_THROW(TFunction::construct(FunctionType::identical) + "abc", std::logic_error);
+    ASSERT_THROW(TFunction::construct(FunctionType::identical) - 3, std::logic_error);
+    ASSERT_THROW(TFunction::construct(FunctionType::identical) * 10.0, std::logic_error);
+    ASSERT_THROW(TFunction::construct(FunctionType::identical) / 'c', std::logic_error);
+}
+
 TEST(ValueTests, IdenticalTest) {
     auto f = TFunction::construct(FunctionType::identical);
     auto x = [](double arg){return arg;};
