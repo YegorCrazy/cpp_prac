@@ -57,6 +57,21 @@ double OperationOnFunctions::value(double arg) const {
     }
 }
 
+double OperationOnFunctions::derivative(double arg) const {
+    if (oper_ == Operation::add) {
+        return first_->derivative(arg) + second_->derivative(arg);
+    } else if (oper_ == Operation::sub) {
+        return first_->derivative(arg) - second_->derivative(arg);
+    } else if (oper_ == Operation::mul) {
+        return second_->value(arg) * first_->derivative(arg) + first_->value(arg) * second_->derivative(arg);
+    } else if (oper_ == Operation::div) {
+        return (second_->value(arg) * first_->derivative(arg) - first_->value(arg) * second_->derivative(arg))
+            / pow(second_->value(arg), 2);
+    } else {
+        throw std::logic_error("unknown operation");
+    }
+}
+
 std::string OperationOnFunctions::toString() const {
     if (oper_ == Operation::add) {
         return first_->toString() + " + " + second_->toString();

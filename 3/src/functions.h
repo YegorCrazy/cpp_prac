@@ -21,7 +21,7 @@ enum class Operation {
 class TFunction {
 public:
     virtual double value(double arg) const = 0;
-    // virtual double derivative(double arg) const;
+    virtual double derivative(double arg) const = 0;
     virtual std::string toString() const = 0;
     static std::shared_ptr<TFunction> 
         construct(FunctionType function_type);
@@ -42,6 +42,9 @@ public:
     double value(double arg) const override {
         return arg;
     }
+    double derivative(double arg) const override {
+        return 1;
+    }
     std::string toString() const override {
         return "x";
     }
@@ -52,6 +55,9 @@ public:
     ConstantFunction(double constant) : constant_(constant) {};
     double value(double arg) const override {
         return constant_;
+    }
+    double derivative(double arg) const override {
+        return 0;
     }
     std::string toString() const override {
         return std::to_string(constant_);
@@ -66,6 +72,9 @@ public:
     double value(double arg) const override {
         return pow(arg, power_);
     }
+    double derivative(double arg) const override {
+        return power_ * pow(arg, power_ - 1);
+    }
     std::string toString() const override {
         return "x^" + std::to_string(power_);
     }
@@ -78,6 +87,9 @@ public:
     ExponentialFunction(double constant) : constant_(constant) {};
     double value(double arg) const override {
         return pow(constant_, arg);
+    }
+    double derivative(double arg) const override {
+        return pow(constant_, arg) * log(constant_);
     }
     std::string toString() const override {
         return std::to_string(constant_) + "^x";
@@ -93,6 +105,13 @@ public:
         double res = 0;
         for (int i = 0; i < coef_.size(); ++i) {
             res += pow(arg, i) * coef_[i];
+        }
+        return res;
+    }
+    double derivative(double arg) const override {
+        double res = 0;
+        for (int i = 1; i < coef_.size(); ++i) {
+            res += i * pow(arg, i - 1) * coef_[i];
         }
         return res;
     }
@@ -116,6 +135,7 @@ public:
         std::shared_ptr<TFunction> second, Operation oper) :
         first_(first), second_(second), oper_(oper) {}
     double value(double arg) const override;
+    double derivative(double arg) const override;
     std::string toString() const override;
 private:
     std::shared_ptr<TFunction> first_;
