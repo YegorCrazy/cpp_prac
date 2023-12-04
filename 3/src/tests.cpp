@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <stdexcept>
 #include "functions.h"
 
 using namespace std;
@@ -25,6 +26,18 @@ TEST(ConstructAndStringTests, ExponentialTest) {
 TEST(ConstructAndStringTests, PolynomialTest) {
     auto f = TFunction::construct(FunctionType::polynomial, {1, 2, 3});
     ASSERT_TRUE(f->toString() == "1.000000x^0 + 2.000000x^1 + 3.000000x^2");
+}
+
+TEST(ExceptionsTests, WithoutArgsTest) {
+    ASSERT_THROW(TFunction::construct(FunctionType::exponential), std::logic_error);
+}
+
+TEST(ExceptionsTests, OneArgTest) {
+    ASSERT_THROW(TFunction::construct(FunctionType::identical, 3), std::logic_error);
+}
+
+TEST(ExceptionsTests, TwoArgsTest) {
+    ASSERT_THROW(TFunction::construct(FunctionType::identical, {1, 2, 3}), std::logic_error);
 }
 
 TEST(ValueTests, IdenticalTest) {
