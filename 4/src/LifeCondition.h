@@ -26,9 +26,10 @@ public:
     double OptValue() const;
     bool IsValid() const;
 private:
-    void CountOptValue();
+    void CountOptValue() const ;
     unsigned size_;
     std::vector<std::vector<bool>> state_;
-    unsigned alive_in_100_iter_;
-    bool static_in_100_iter_;
+    mutable unsigned alive_in_100_iter_ = 0;
+    mutable bool static_in_100_iter_ = 0;
+    mutable bool counted_alive_ = false;
 };
