@@ -2,16 +2,17 @@
 
 #include <vector>
 #include "LifeCondition.h"
+#include <memory>
 
 class TSelection {
 public:
-    virtual std::vector<LifeCondition> Select(const std::vector<LifeCondition>& population, unsigned get_num) = 0;
+    virtual std::shared_ptr<std::vector<LifeCondition>> Select(std::vector<LifeCondition>& population, unsigned get_num) = 0;
 };
 
 class TournamentSelection : public TSelection {
 public:
     TournamentSelection(unsigned tournament_players) : tournament_players_(tournament_players) {};
-    std::vector<LifeCondition> Select(const std::vector<LifeCondition>& population, unsigned get_num) override;
+    std::shared_ptr<std::vector<LifeCondition>> Select(std::vector<LifeCondition>& population, unsigned get_num) override;
 private:
     unsigned tournament_players_;
 };

@@ -59,24 +59,39 @@ LifeCondition LifeCondition::SkipConditions(int step_num) const {
     for (int step = 0; step < step_num; ++step) {
         auto cur_copy = LifeCondition(cur.GetSize(), Special::zeros);
         for (int i = 0; i < size_; ++i) {
+            int first_row = 0;
+            int second_row = 0;
+            if (cur.state_[i][0]) {
+                second_row += 1;
+            }
+            if (i + 1 < size_ && cur.state_[i + 1][0]) {
+                second_row += 1;
+            }
+            if (i - 1 >= 0 && cur.state_[i - 1][0]) {
+                second_row += 1;
+            }
+            int third_row;
             for (int j = 0; j < size_; ++j) {
-                int alive_neighbours = 0;
-                for (int di = -1; di <= 1; ++di) {
-                    for (int dj = -1; dj <= 1; ++dj) {
-                        if (i + di >= 0 && i + di < size_ &&
-                            j + dj >= 0 && j + dj < size_ &&
-                            !(di == 0 && dj == 0) &&
-                            cur.state_[i + di][j + dj])
-                        {
-                            alive_neighbours += 1;
-                        }
+                third_row = 0;
+                if (j + 1 < size_) {
+                    if (cur.state_[i][j + 1]) {
+                        third_row += 1;
+                    }
+                    if (i + 1 < size_ && cur.state_[i + 1][j + 1]) {
+                        third_row += 1;
+                    }
+                    if (i - 1 >= 0 && cur.state_[i - 1][j + 1]) {
+                        third_row += 1;
                     }
                 }
+                int alive_neighbours = first_row + second_row + third_row - (cur.state_[i][j] ? 1 : 0);
                 if (alive_neighbours == 3) {
                     cur_copy.state_[i][j] = true;
                 } else if (alive_neighbours == 2 && cur.state_[i][j]) {
                     cur_copy.state_[i][j] = true;
                 }
+                first_row = second_row;
+                second_row = third_row;
             }
         }
         cur = cur_copy;

@@ -12,13 +12,13 @@ double BestValue(std::vector<LifeCondition> population, LifeCondition& best) {
     for (const auto& sp : population) {
         if (sp.IsValid()) {
             found_correct = true;
-            min_value = population[0].OptValue();
-            best = population[0];
+            min_value = sp.OptValue();
+            best = sp;
             break;
         }
     }
     if (!found_correct) {
-        std::cout << "NO CORRECT SOLUTIONS FOUND" << std::endl;
+        //std::cout << "NO CORRECT SOLUTIONS FOUND" << std::endl;
     }
     for (const auto& sp : population) {
         if (!sp.IsValid()) {
@@ -48,13 +48,12 @@ LifeCondition MainCycle(const MainCycleParams& param) {
     std::vector<LifeCondition> current_population = param.start;
     int without_gradeup = 0;
     while (without_gradeup < 50) {
-        auto now = std::chrono::system_clock::now();
         auto selected = param.selection->Select(current_population, 
             current_population.size());
         std::vector<LifeCondition> new_population;
         while (new_population.size() < param.population_size) {
-            LifeCondition first = selected[rand() % selected.size()];
-            LifeCondition second = selected[rand() % selected.size()];
+            LifeCondition first = selected->operator[](rand() % selected->size());
+            LifeCondition second = selected->operator[](rand() % selected->size());
             double prob = rand() / (double)RAND_MAX;
             if (prob < param.breed_prob) {
                 auto children = param.breed->Breed(first, second);
@@ -77,13 +76,11 @@ LifeCondition MainCycle(const MainCycleParams& param) {
             best_value = local_min;
             best_sol = local_best;
             without_gradeup = 0;
-            std::cout << "new best: " << best_value << std::endl;
+            // std::cout << "new best: " << best_value << std::endl;
         } else {
             without_gradeup += 1;
-            std::cout << "no gradeup " << without_gradeup << std::endl;
+            // std::cout << "no gradeup " << without_gradeup << std::endl;
         }
-        std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now() - now).count() << "ms" << std::endl;
     }
     return best_sol;
 }
